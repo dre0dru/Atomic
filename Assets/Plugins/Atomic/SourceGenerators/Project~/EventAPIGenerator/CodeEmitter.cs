@@ -63,30 +63,34 @@ namespace EventAPIGenerator
             string invokeGenericArgs = string.IsNullOrEmpty(genericArgs) ? string.Empty : $"<{genericArgs}>";
             string subscribeGenericArgs = invokeGenericArgs;
 
+            string subscribeMethod = evt.IsUnsafe ? "SubscribeUnsafe" : "Subscribe";
+            string unsubscribeMethod = evt.IsUnsafe ? "UnsubscribeUnsafe" : "Unsubscribe";
+            string invokeMethod = evt.IsUnsafe ? "InvokeUnsafe" : "Invoke";
+
             w.Line();
             w.Line($"#region {evt.Name}");
             w.Line();
 
             // Subscribe
             w.Line($"public static {subscriptionType} Subscribe{evt.Name}(this {busTypeName} bus, {actionType} action) =>");
-            w.Line($"    bus.Subscribe{subscribeGenericArgs}({key}, action);");
+            w.Line($"    bus.{subscribeMethod}{subscribeGenericArgs}({key}, action);");
             w.Line();
 
             // Unsubscribe
             w.Line($"public static void Unsubscribe{evt.Name}(this {busTypeName} bus, {actionType} action) =>");
-            w.Line($"    bus.Unsubscribe{subscribeGenericArgs}({key}, action);");
+            w.Line($"    bus.{unsubscribeMethod}{subscribeGenericArgs}({key}, action);");
             w.Line();
 
             // Invoke
             if (argCount == 0)
             {
                 w.Line($"public static void Invoke{evt.Name}(this {busTypeName} bus) =>");
-                w.Line($"    bus.Invoke({key});");
+                w.Line($"    bus.{invokeMethod}({key});");
             }
             else
             {
                 w.Line($"public static void Invoke{evt.Name}(this {busTypeName} bus, {invokeParams}) =>");
-                w.Line($"    bus.Invoke{invokeGenericArgs}({key}, {GetInvokeArgs(argCount)});");
+                w.Line($"    bus.{invokeMethod}{invokeGenericArgs}({key}, {GetInvokeArgs(argCount)});");
             }
 
             w.Line();

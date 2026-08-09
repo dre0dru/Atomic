@@ -14,6 +14,7 @@ namespace EventAPIGenerator
     {
         private const string EventAPIAttributeName = "GenerateEventExtensionsAPI";
         private const string EventKeyTypeName = "EventKey";
+        private const string UnsafeAttributeName = "Unsafe";
         private const string AtomicEventsNamespace = "Atomic.Events";
 
         /// <summary>
@@ -45,8 +46,10 @@ namespace EventAPIGenerator
             if (classSymbol == null)
                 return null;
 
-            if (!HasEventAPIAttribute(classSymbol.GetAttributes()))
+            if (!TryGetEventAPIAttribute(classSymbol.GetAttributes(), out AttributeData? attributeData))
                 return null;
+
+            bool classUnsafe = TryGetNamedArgBool(attributeData!, "Unsafe");
 
             string ns = GetNamespace(classDecl);
             var events = new List<EventField>();
@@ -85,12 +88,15 @@ namespace EventAPIGenerator
                 for (int i = 1; i < arity; i++)
                     argTypeNames.Add(namedType.TypeArguments[i].ToDisplayString());
 
-                events.Add(new EventField(fieldName, busTypeName, argTypeNames.AsReadOnly()));
+                bool fieldUnsafe = classUnsafe || HasUnsafeAttribute(fieldDecl);
+
+                events.Add(new EventField(fieldName, busTypeName, argTypeNames.AsReadOnly(), fieldUnsafe));
             }
 
             return new EventAPIDefinition(
                 ns: ns,
                 className: classDecl.Identifier.Text,
+                unsafeFlag: classUnsafe,
                 events: events.AsReadOnly()
             );
         }
@@ -108,18 +114,52 @@ namespace EventAPIGenerator
                    name == EventAPIAttributeName + "Attribute";
         }
 
-        private static bool HasEventAPIAttribute(IEnumerable<AttributeData> attributes)
+        private static bool TryGetEventAPIAttribute(IEnumerable<AttributeData> attributes, out AttributeData? result)
         {
             foreach (var attr in attributes)
             {
                 if (attr.AttributeClass?.Name == EventAPIAttributeName ||
                     attr.AttributeClass?.Name == EventAPIAttributeName + "Attribute")
                 {
+                    result = attr;
                     return true;
                 }
             }
 
+            result = null;
             return false;
+        }
+
+        private static bool TryGetNamedArgBool(AttributeData attribute, string argName)
+        {
+            foreach (var kvp in attribute.NamedArguments)
+            {
+                if (kvp.Key == argName &&
+                    kvp.Value.Kind == TypedConstantKind.Primitive &&
+                    kvp.Value.Value is bool value)
+                {
+                    return value;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasUnsafeAttribute(FieldDeclarationSyntax fieldDecl)
+        {
+            return fieldDecl.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .Any(attr =>
+                {
+                    string? name = attr.Name switch
+                    {
+                        IdentifierNameSyntax id => id.Identifier.Text,
+                        QualifiedNameSyntax q => q.Right.Identifier.Text,
+                        _ => null
+                    };
+                    return name == UnsafeAttributeName ||
+                           name == UnsafeAttributeName + "Attribute";
+                });
         }
 
         private static string GetNamespace(SyntaxNode node)

@@ -18,16 +18,23 @@ namespace EventAPIGenerator.Models
         /// <summary>Event argument type names, e.g. <c>IGameEntity</c>.</summary>
         public IReadOnlyList<string> ArgTypeNames { get; }
 
-        public EventField(string name, string busTypeName, IReadOnlyList<string> argTypeNames)
+        /// <summary>
+        /// Whether this event should generate unsafe subscribe/unsubscribe/invoke calls.
+        /// </summary>
+        public bool IsUnsafe { get; }
+
+        public EventField(string name, string busTypeName, IReadOnlyList<string> argTypeNames, bool isUnsafe = false)
         {
             Name = name;
             BusTypeName = busTypeName;
             ArgTypeNames = argTypeNames;
+            IsUnsafe = isUnsafe;
         }
 
         public bool Equals(EventField other) =>
             Name == other.Name &&
             BusTypeName == other.BusTypeName &&
+            IsUnsafe == other.IsUnsafe &&
             SequenceEqual(ArgTypeNames, other.ArgTypeNames);
 
         public override bool Equals(object obj) =>
@@ -38,6 +45,7 @@ namespace EventAPIGenerator.Models
             int hash = 17;
             hash = hash * 31 + (Name?.GetHashCode() ?? 0);
             hash = hash * 31 + (BusTypeName?.GetHashCode() ?? 0);
+            hash = hash * 31 + IsUnsafe.GetHashCode();
             foreach (var arg in ArgTypeNames)
                 hash = hash * 31 + (arg?.GetHashCode() ?? 0);
             return hash;

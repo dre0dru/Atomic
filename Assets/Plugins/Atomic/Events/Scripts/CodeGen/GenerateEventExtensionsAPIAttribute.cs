@@ -12,6 +12,14 @@ namespace Atomic.Events
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class GenerateEventExtensionsAPIAttribute : Attribute
     {
+        /// <summary>
+        /// When <c>true</c>, all event fields generate
+        /// <c>SubscribeUnsafe</c>, <c>UnsubscribeUnsafe</c>, and <c>InvokeUnsafe</c>
+        /// calls instead of the safe variants.
+        /// Individual fields can override this with <c>[Unsafe]</c>.
+        /// </summary>
+        public bool Unsafe { get; set; }
+
         public GenerateEventExtensionsAPIAttribute()
         {
         }
