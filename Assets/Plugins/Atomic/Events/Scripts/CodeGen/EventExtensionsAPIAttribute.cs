@@ -10,7 +10,7 @@ namespace Atomic.Events
     /// for the event bus type declared in each key's first generic argument.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class GenerateEventExtensionsAPIAttribute : Attribute
+    public sealed class EventExtensionsAPIAttribute : Attribute
     {
         /// <summary>
         /// When <c>true</c>, all event fields generate
@@ -20,7 +20,7 @@ namespace Atomic.Events
         /// </summary>
         public bool Unsafe { get; set; }
 
-        public GenerateEventExtensionsAPIAttribute()
+        public EventExtensionsAPIAttribute()
         {
         }
     }

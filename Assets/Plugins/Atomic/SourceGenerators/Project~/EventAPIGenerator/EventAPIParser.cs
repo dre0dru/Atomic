@@ -8,17 +8,17 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace EventAPIGenerator
 {
     /// <summary>
-    /// Parses <c>[GenerateEventExtensionsAPI]</c>-annotated classes from Roslyn syntax + semantic models.
+    /// Parses <c>[EventExtensionsAPI]</c>-annotated classes from Roslyn syntax + semantic models.
     /// </summary>
     internal static class EventAPIParser
     {
-        private const string EventAPIAttributeName = "GenerateEventExtensionsAPI";
+        private const string EventAPIAttributeName = "EventExtensionsAPI";
         private const string EventKeyTypeName = "EventKey";
         private const string UnsafeAttributeName = "Unsafe";
         private const string AtomicEventsNamespace = "Atomic.Events";
 
         /// <summary>
-        /// Quick syntax check — does this node look like a class with <c>[GenerateEventExtensionsAPI]</c>?
+        /// Quick syntax check — does this node look like a class with <c>[EventExtensionsAPI]</c>?
         /// Runs before the semantic model is available (cheap).
         /// </summary>
         public static bool IsCandidate(SyntaxNode node)

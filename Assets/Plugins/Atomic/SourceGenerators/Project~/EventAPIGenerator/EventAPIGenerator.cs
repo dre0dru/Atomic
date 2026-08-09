@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 namespace EventAPIGenerator
 {
     /// <summary>
-    /// Incremental source generator that reads <c>[GenerateEventExtensionsAPI]</c>-marked classes
+    /// Incremental source generator that reads <c>[EventExtensionsAPI]</c>-marked classes
     /// and generates extension methods for Atomic event keys.
     /// </summary>
     [Generator]
@@ -17,7 +17,7 @@ namespace EventAPIGenerator
         public const string Id = "EventAPIGenerator";
 
         /// <summary>
-        /// Name of the assembly that defines the <c>[GenerateEventExtensionsAPI]</c> attribute.
+        /// Name of the assembly that defines the <c>[EventExtensionsAPI]</c> attribute.
         /// </summary>
         internal static readonly string CodegenAssemblyName = "Atomic.Events";
 
@@ -39,17 +39,17 @@ namespace EventAPIGenerator
             if (!IsBuildTime)
                 return false;
 
-            // Skip the Atomic.Events assembly itself (it only defines [GenerateEventExtensionsAPI], doesn't use it)
+            // Skip the Atomic.Events assembly itself (it only defines [EventExtensionsAPI], doesn't use it)
             if (compilation.Assembly.Name == CodegenAssemblyName)
                 return false;
 
-            // Only run if the compilation references Atomic.Events (can use [GenerateEventExtensionsAPI])
+            // Only run if the compilation references Atomic.Events (can use [EventExtensionsAPI])
             return compilation.ReferencedAssemblyNames.Any(n => n.Name == CodegenAssemblyName);
         }
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            // Step 1: Find all candidate classes with [GenerateEventExtensionsAPI] attribute
+            // Step 1: Find all candidate classes with [EventExtensionsAPI] attribute
             // Uses CreateSyntaxProvider for Unity 6000 (Roslyn 4.3.0) compatibility.
             var pipeline = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: (node, _) => EventAPIParser.IsCandidate(node),
@@ -73,7 +73,7 @@ namespace EventAPIGenerator
                 // Setup debug output (reads ATOMIC_OUTPUT_SOURCEGEN_FILES define)
                 SourceOutputHelpers.Setup(parseOptions);
 
-                // Early bail-out if this compilation can't have [GenerateEventExtensionsAPI] classes
+                // Early bail-out if this compilation can't have [EventExtensionsAPI] classes
                 if (!ShouldRun(compilation))
                     return;
 

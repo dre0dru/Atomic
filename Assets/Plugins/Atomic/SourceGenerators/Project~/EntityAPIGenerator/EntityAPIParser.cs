@@ -9,16 +9,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace EntityAPIGenerator
 {
     /// <summary>
-    /// Parses <c>[GenerateEntityExtensionsAPI]</c>-annotated classes from Roslyn syntax + semantic models.
+    /// Parses <c>[EntityExtensionsAPI]</c>-annotated classes from Roslyn syntax + semantic models.
     /// </summary>
     internal static class EntityAPIParser
     {
-        private const string EntityAPIAttributeName = "GenerateEntityExtensionsAPI";
+        private const string EntityAPIAttributeName = "EntityExtensionsAPI";
         private const string UnsafeAttributeName = "Unsafe";
 
 
         /// <summary>
-        /// Quick syntax check — does this node look like a class with <c>[GenerateEntityExtensionsAPI]</c>?
+        /// Quick syntax check — does this node look like a class with <c>[EntityExtensionsAPI]</c>?
         /// Runs before the semantic model is available (cheap).
         /// </summary>
         public static bool IsCandidate(SyntaxNode node)
@@ -42,7 +42,7 @@ namespace EntityAPIGenerator
 
             SemanticModel semanticModel = context.SemanticModel;
 
-            // Resolve class symbol and find [GenerateEntityExtensionsAPI] attribute manually
+            // Resolve class symbol and find [EntityExtensionsAPI] attribute manually
             INamedTypeSymbol? classSymbol = semanticModel.GetDeclaredSymbol(classDecl) as INamedTypeSymbol;
             if (classSymbol == null)
                 return null;
