@@ -1,4 +1,4 @@
-# ⚡ UnsafeAttribute
+# 🧩 UnsafeAttribute
 
 Marks an individual `ValueKey<>` field in an `[EntityExtensionsAPI]` class as unsafe. The source generator emits
 `GetValueUnsafe<T>` and `Ref{Name}()` methods for that field instead of the safe `GetValue<T>` accessor.

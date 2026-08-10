@@ -1,4 +1,4 @@
-# ⚡ UnsafeAttribute
+# 🧩 UnsafeAttribute
 
 Marks an individual `EventKey<>` field in an `[EventExtensionsAPI]` class as unsafe. The source generator emits
 `SubscribeUnsafe`, `UnsubscribeUnsafe`, and `InvokeUnsafe` calls for that field instead of the safe variants.

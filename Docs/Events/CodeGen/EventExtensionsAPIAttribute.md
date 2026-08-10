@@ -1,4 +1,4 @@
-# 🧬 EventExtensionsAPIAttribute
+# 🧩 EventExtensionsAPIAttribute
 
 Marks a static class as an **Event API definition** for the Event API Generator. The generator reads `EventKey<>` fields
 and emits strongly-typed extension methods for subscribing, invoking, and unsubscribing from events.

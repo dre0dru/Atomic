@@ -1,4 +1,4 @@
-# 🧬 EntityExtensionsAPIAttribute
+# 🧩 EntityExtensionsAPIAttribute
 
 Marks a static class as an **Entity API definition** for the Entity API Generator. The generator reads `TagKey<>` and
 `ValueKey<>` fields and emits strongly-typed extension methods for entity tags and values.
