@@ -15,6 +15,7 @@ framework, all game objects, systems, UI elements, and application contexts can 
   - [Configuration](#configuration)
   - [Analyzer](#analyzer)
   - [Setup](#setup)
+- [Entity Domain Behaviours](#-entity-domain-behaviours)
 - [API Reference](#-api-reference)
 - [Performance](#-performance)
 - [Best Practices](#-best-practices)
@@ -134,6 +135,38 @@ For event-bus source generation, see the [Events manual](../Events/Manual.md#-ev
 
 ---
 
+## 🎭 Entity Domain Behaviours
+
+The [Entity Domain Generator](CodeGen/EntityDomainBehavioursAttribute.md) emits strongly-typed domain behaviour
+interfaces for a specific entity type. Mark any class with `[EntityDomainBehaviours(typeof(IYourEntity))]` and the
+generator creates interfaces such as `IYourEntityBehaviour`, `IYourEntityTick`, `IYourEntityInit`, and others.
+
+```csharp
+using Atomic.Entities;
+
+namespace Game.Domain
+{
+    public interface IPlayer : IEntity { }
+
+    [EntityDomainBehaviours(typeof(IPlayer))]
+    public static class PlayerDomain { }
+}
+```
+
+After compilation, implement the generated interfaces:
+
+```csharp
+public sealed class PlayerMoveBehaviour : IPlayerTick
+{
+    public void Tick(IPlayer player, float deltaTime) { }
+}
+```
+
+This removes the boilerplate of manually creating `IEntityTick<IPlayer>`, `IEntityInit<IPlayer>`, and other lifecycle
+interfaces for every domain entity.
+
+---
+
 ## 🔍 API Reference
 
 This section provides a complete reference to all major subsystems of the framework. Each module is documented with
@@ -158,6 +191,7 @@ usage examples, lifecycle details, and integration notes to help you build, exte
 - [Views](UI/Manual.md) <!-- + -->
 - [KeyStore](KeyStore/Manual.md) <!-- + -->
 - [Source Generation](CodeGen/EntityExtensionsAPIAttribute.md) <!-- + -->
+- [EntityDomainBehaviours](CodeGen/EntityDomainBehavioursAttribute.md) <!-- + -->
 - [UnsafeAttribute](CodeGen/UnsafeAttribute.md) <!-- + -->
 
 ---

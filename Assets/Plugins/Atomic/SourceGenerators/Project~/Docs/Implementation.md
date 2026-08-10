@@ -30,7 +30,8 @@ SourceGenerators/
 ├── EntityAPIGenerator/              # [EntityExtensionsAPI] generator for tags/values
 ├── EntityAPIAnalyzer/              # diagnostics + code fixes for [EntityExtensionsAPI]
 ├── EventAPIGenerator/              # [EventExtensionsAPI] generator for event keys
-└── EventAPIAnalyzer/               # diagnostics + code fixes for [EventExtensionsAPI]
+├── EventAPIAnalyzer/               # diagnostics + code fixes for [EventExtensionsAPI]
+└── EntityDomainGenerator/           # [EntityDomainBehaviours] generator for domain behaviour interfaces
 ```
 
 Each generator/analyzer project compiles into its own DLL. Unity loads these DLLs as Roslyn analyzers.
@@ -86,6 +87,7 @@ Both generators are incremental (`IIncrementalGenerator`) and follow the same sh
 1. **Find candidates** with `SyntaxProvider.CreateSyntaxProvider`.
    - `EntityAPIGenerator` looks for classes with `[EntityExtensionsAPI]`.
    - `EventAPIGenerator` looks for classes with `[EventExtensionsAPI]`.
+   - `EntityDomainGenerator` looks for classes with `[EntityDomainBehaviours(typeof(...))]`.
 2. **Transform** each candidate into a semantic model (parser).
 3. **Filter** out invalid candidates (e.g., wrong field types, missing attribute).
 4. **Combine** the collected definitions with the compilation and parse options.
@@ -164,7 +166,7 @@ Always verify generator behavior by building inside Unity, not only with the sta
 
 ## 📝 Important Design Notes
 
-- Keep marker attributes (`[EntityExtensionsAPI]`, `[EventExtensionsAPI]`) in a **separate Unity assembly definition** (`Atomic.Entities`, `Atomic.Events`) so the generator can discover them during compilation.
+- Keep marker attributes (`[EntityExtensionsAPI]`, `[EventExtensionsAPI]`, `[EntityDomainBehaviours]`) in a **separate Unity assembly definition** (`Atomic.Entities`, `Atomic.Events`) so the generator can discover them during compilation.
 - Generator DLLs must be marked with the `RoslynAnalyzer` asset label in Unity and must have **all platforms unchecked**.
 - Generators run only at **build time**; they do not add runtime overhead.
 - Use `SyntaxProvider.CreateSyntaxProvider` for Roslyn 4.3.0 compatibility.
