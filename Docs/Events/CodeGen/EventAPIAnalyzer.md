@@ -1,6 +1,6 @@
 # 🔬 EventAPIAnalyzer
 
-A Roslyn diagnostic analyzer that validates `[GenerateEventExtensionsAPI]` class declarations for the Event API Generator. It reports build
+A Roslyn diagnostic analyzer that validates `[EventExtensionsAPI]` class declarations for the Event API Generator. It reports build
 errors when event key fields are missing an initializer or are initialized with `new()` / `default`.
 
 ---
@@ -20,7 +20,7 @@ The analyzer flags invalid initializers:
 ```csharp
 using Atomic.Events;
 
-[GenerateEventExtensionsAPI]
+[EventExtensionsAPI]
 public static partial class GameEventAPI
 {
     // EAPI0001: field is not initialized
@@ -34,7 +34,7 @@ public static partial class GameEventAPI
 After applying the code fix:
 
 ```csharp
-[GenerateEventExtensionsAPI]
+[EventExtensionsAPI]
 public static partial class GameEventAPI
 {
     public static readonly EventKey<IEventBus> PlayerTurnStarted = new(nameof(PlayerTurnStarted));
@@ -53,11 +53,11 @@ public static partial class GameEventAPI
 public class EventAPIAnalyzer : DiagnosticAnalyzer
 ```
 
-- **Description:** Roslyn diagnostic analyzer that validates `[GenerateEventExtensionsAPI]` key initializers.
+- **Description:** Roslyn diagnostic analyzer that validates `[EventExtensionsAPI]` key initializers.
 - **Inheritance:** `DiagnosticAnalyzer`
 - **Notes:**
   - Only static fields of type `EventKey<>` from the `Atomic.Events` namespace are checked.
   - **EAPI0001** — event key field has no initializer.
   - **EAPI0002** — event key field is initialized with `new()` or `default`.
   - Both diagnostics ship with a code fix that inserts `= new(nameof(FieldName))`.
-- **See also:** [EventAPIGenerator](EventAPIGenerator.md), [Setup](../Setup.md), [Code Generation Manual](../Manual.md)
+- **See also:** [EventExtensionsAPIAttribute](EventExtensionsAPIAttribute.md), [UnsafeAttribute](UnsafeAttribute.md), [Event API Source Generation](../Manual.md#-event-api-source-generation)
