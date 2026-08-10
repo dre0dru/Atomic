@@ -52,8 +52,8 @@ Atomic works perfectly **without Odin**, but using it makes data inspection and 
 > [!TIP]
 > The source generators (`EntityAPIGenerator`, `EventAPIGenerator`, and the corresponding analyzers) are included as
 > precompiled DLLs in `Assets/Plugins/Atomic/SourceGenerators/`. They are ready to use after importing the package.
-> For advanced scenarios or to build them yourself, see the source repository at
-> https://github.com/dre0dru/Atomic.SourceGenerators.
+> For advanced scenarios or to build them yourself, see the generator source in
+> `Assets/Plugins/Atomic/SourceGenerators/Project~`.
 
 
 ---

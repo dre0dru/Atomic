@@ -133,8 +133,8 @@ The generator and analyzer DLLs are compile-time only. Add them to your Unity pr
 4. Under **Select platforms for plugin**, uncheck **Any Platform** and every individual platform.
 5. Click **Apply** and restart Unity or run `Assets → Reimport All`.
 
-For full build/deploy instructions, see the generator source repository at
-**https://github.com/dre0dru/Atomic.SourceGenerators**.
+For full build/deploy instructions, see the generator source in
+`Assets/Plugins/Atomic/SourceGenerators/Project~`.
 
 #### Inspecting generated source
 
